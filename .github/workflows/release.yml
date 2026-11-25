@@ -1,0 +1,45 @@
+name: Release Engine
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Ensure CMake
+        run: |
+          if ! command -v cmake >/dev/null 2>&1; then
+            brew install cmake
+          fi
+      - name: Build Native Core & Mod JAR
+        run: |
+          VERSION=$(grep -E '^mod_version=' gradle.properties | cut -d'=' -f2)
+          MC_VERSION=$(grep -E '^minecraft_version=' gradle.properties | cut -d'=' -f2)
+          gradle --max-workers=1 :core:buildNativeMetalCore :api:check :core:check :mod:check :mod:build
+          mkdir -p dist
+          cp "mod/build/libs/metality-mc${MC_VERSION}-${VERSION}.jar" dist/
+          cp "api/build/libs/api-${VERSION}.jar" "dist/metality-api-${VERSION}.jar"
+          (cd dist && shasum -a 256 *.jar > SHA256SUMS.txt)
+          echo "RELEASE_TAG=v${VERSION}" >> "$GITHUB_ENV"
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" dist/*.jar dist/SHA256SUMS.txt --clobber
+          else
+            gh release create "$RELEASE_TAG" dist/*.jar dist/SHA256SUMS.txt --title "Metality Engine ${RELEASE_TAG}" --notes-file CHANGELOG.md --prerelease
+          fi

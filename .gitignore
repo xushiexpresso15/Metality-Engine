@@ -1,0 +1,30 @@
+# Gradle & Java
+.gradle/
+build/
+mod/build/
+mod/.gradle/
+mod/logs/
+out/
+
+# CMake & C++ Native Build
+native/build/
+cmake-build-*/
+*.dylib
+*.metallib
+
+# Node / TypeScript SDK
+sdk/node_modules/
+sdk/dist/
+
+# Separate repositories / local raw media
+shaderpacks/
+photos/
+
+# Release artifacts (upload to GitHub Releases instead of committing binaries)
+releases/
+
+# macOS & IDE
+.DS_Store
+.idea/
+.vscode/
+*.iml
