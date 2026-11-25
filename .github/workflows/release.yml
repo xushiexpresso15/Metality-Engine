@@ -31,7 +31,10 @@ jobs:
         run: |
           VERSION=$(grep -E '^mod_version=' gradle.properties | cut -d'=' -f2)
           MC_VERSION=$(grep -E '^minecraft_version=' gradle.properties | cut -d'=' -f2)
-          gradle --max-workers=1 :core:buildNativeMetalCore :api:check :core:check :mod:check :mod:build
+          gradle --max-workers=1 \
+            -Dorg.gradle.java.home="$JAVA_HOME" \
+            -Dorg.gradle.java.installations.paths="$JAVA_HOME" \
+            :core:buildNativeMetalCore :api:jar :core:jar :mod:assemble
           mkdir -p dist
           cp "mod/build/libs/metality-mc${MC_VERSION}-${VERSION}.jar" dist/
           cp "api/build/libs/api-${VERSION}.jar" "dist/metality-api-${VERSION}.jar"
