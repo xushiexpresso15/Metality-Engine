@@ -19,10 +19,13 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
-      - name: Ensure CMake
+      - name: Ensure CMake & Gradle
         run: |
           if ! command -v cmake >/dev/null 2>&1; then
             brew install cmake
+          fi
+          if ! command -v gradle >/dev/null 2>&1; then
+            brew install gradle
           fi
       - name: Build Native Core & Mod JAR
         run: |
