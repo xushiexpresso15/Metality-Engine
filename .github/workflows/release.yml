@@ -29,6 +29,7 @@ jobs:
           fi
       - name: Build Native Core & Mod JAR
         run: |
+          API_VERSION=$(grep -E '^api_version=' gradle.properties | cut -d'=' -f2)
           VERSION=$(grep -E '^mod_version=' gradle.properties | cut -d'=' -f2)
           MC_VERSION=$(grep -E '^minecraft_version=' gradle.properties | cut -d'=' -f2)
           gradle --max-workers=1 \
@@ -37,7 +38,12 @@ jobs:
             :core:buildNativeMetalCore :api:jar :core:jar :mod:assemble
           mkdir -p dist
           cp "mod/build/libs/metality-mc${MC_VERSION}-${VERSION}.jar" dist/
-          cp "api/build/libs/api-${VERSION}.jar" "dist/metality-api-${VERSION}.jar"
+          cp CHANGELOG.md dist/RELEASE_BODY.md
+          if [[ "$API_VERSION" == "$VERSION" ]]; then
+            cp "api/build/libs/api-${API_VERSION}.jar" "dist/metality-api-${API_VERSION}.jar"
+          else
+            printf '\n---\n**Addon Developers**: Compatible with **Metality API `v%s`** (no API changes in this release — grab `metality-api-%s.jar` from release `v%s`).\n' "$API_VERSION" "$API_VERSION" "$API_VERSION" >> dist/RELEASE_BODY.md
+          fi
           (cd dist && shasum -a 256 *.jar > SHA256SUMS.txt)
           echo "RELEASE_TAG=v${VERSION}" >> "$GITHUB_ENV"
       - name: Publish GitHub Release
@@ -47,5 +53,5 @@ jobs:
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" dist/*.jar dist/SHA256SUMS.txt --clobber
           else
-            gh release create "$RELEASE_TAG" dist/*.jar dist/SHA256SUMS.txt --title "Metality Engine ${RELEASE_TAG}" --notes-file CHANGELOG.md --prerelease
+            gh release create "$RELEASE_TAG" dist/*.jar dist/SHA256SUMS.txt --title "Metality Engine ${RELEASE_TAG}" --notes-file dist/RELEASE_BODY.md --prerelease
           fi

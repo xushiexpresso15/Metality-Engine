@@ -41,7 +41,9 @@ v<MAJOR>.<MINOR>.<PATCH>[-<stage>.<N>]
 | **Meteor Zenith 光影包** | `meteor-zenith-<PACK_VERSION>.zip` | `meteor-zenith-0.1.0-beta.1.zip` |
 | **TypeScript SDK** | `@metality/sdk@<SDK_VERSION>` | `0.1.0-beta.1` |
 
-> **版本同步原則**：引擎與官方光影包在重大里程碑同步升版（並輸出整合包 `releases/bundles/v<VERSION>/`）；若後續僅微調單一光影包（不改引擎）或僅修補引擎（不改光影），兩者可各自獨立推進 `PATCH` 或 `beta.N`。
+> **版本獨立與 API 穩定原則**：
+> - **引擎與官方光影包各自獨立疊代**：各自推進 `mod_version` 與 `pack.json`（只有在重大整合里程碑時才同步出整合包）。
+> - **`api_version` 與 `mod_version` 分離**：`gradle.properties` 中的 `api_version` 只在 `:api` 對外介面實際變更時才升版。當引擎修 Bug／優化升至 `0.1.0-beta.2` 且 `api_version` 仍維持 `0.1.0-beta.1` 時，GitHub Release **僅上傳玩家用 `metality-mc26.3-*.jar`**，並在 Release Notes 標註相容的 `api_version`（開發者直接沿用原版或透過 Gradle/JitPack 引用即可）。
 
 ---
 

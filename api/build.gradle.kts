@@ -3,6 +3,8 @@ plugins {
     `maven-publish`
 }
 
+version = property("api_version") as String
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(25))

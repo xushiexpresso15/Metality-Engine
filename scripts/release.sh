@@ -9,6 +9,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 VERSION="${1:-$(grep -E '^mod_version=' gradle.properties | cut -d'=' -f2)}"
+API_VERSION="$(grep -E '^api_version=' gradle.properties | cut -d'=' -f2)"
 MC_VERSION="$(grep -E '^minecraft_version=' gradle.properties | cut -d'=' -f2)"
 SKIP_BUILD="${2:-}"
 
@@ -37,7 +38,7 @@ if [[ "$SKIP_BUILD" != "--skip-build" ]]; then
 fi
 
 MOD_JAR="mod/build/libs/metality-mc${MC_VERSION}-${VERSION}.jar"
-API_JAR="api/build/libs/api-${VERSION}.jar"
+API_JAR="api/build/libs/api-${API_VERSION}.jar"
 
 if [[ ! -f "$MOD_JAR" ]]; then
   echo "Error: expected Mod JAR not found: $MOD_JAR" >&2
@@ -52,10 +53,10 @@ BUNDLE_DIR="releases/bundles/${TAG}"
 
 mkdir -p "$ENGINE_DIR" "$DUSK_DIR" "$ZENITH_DIR" "$BUNDLE_DIR"
 
-# 4. Copy Engine artifacts
+# 4. Copy Engine artifacts (only attach metality-api JAR when api_version == mod_version)
 cp -f "$MOD_JAR" "${ENGINE_DIR}/metality-mc${MC_VERSION}-${VERSION}.jar"
-if [[ -f "$API_JAR" ]]; then
-  cp -f "$API_JAR" "${ENGINE_DIR}/metality-api-${VERSION}.jar"
+if [[ "$API_VERSION" == "$VERSION" && -f "$API_JAR" ]]; then
+  cp -f "$API_JAR" "${ENGINE_DIR}/metality-api-${API_VERSION}.jar"
 fi
 
 # 5. Package Shader Packs (.zip, clean of macOS .DS_Store)
