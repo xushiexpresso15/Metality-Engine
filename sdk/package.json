@@ -1,0 +1,27 @@
+{
+  "name": "@metality/sdk",
+  "version": "0.1.0-beta.1",
+  "description": "Aperture-compatible Shader Pack SDK with Apple Silicon Metal 3/4 TBDR, MetalFX, and Hardware Ray Tracing extensions",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "keywords": [
+    "minecraft",
+    "shaders",
+    "aperture",
+    "slang",
+    "apple-silicon",
+    "metal",
+    "tbdr",
+    "metalfx"
+  ],
+  "license": "Apache-2.0"
+}

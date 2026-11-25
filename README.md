@@ -1,3 +1,5 @@
+![Metality Engine](assets/banner.png)
+
 # Metality Engine
 
 A native Apple Silicon (Metal) rendering and shader engine for **Minecraft 26.3 (Fabric)** on macOS.

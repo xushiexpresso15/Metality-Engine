@@ -1,0 +1,35 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.metality.mc263.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "WindowBackendMixin",
+    "PreferredGraphicsApiMixin",
+    "SectionCompilerMixin",
+    "LevelRendererMixin",
+    "LightmapMixin",
+    "LightmapRenderStateExtractorMixin",
+    "ShadowFeatureRendererMixin",
+    "FogRendererMixin",
+    "ClientLevelMixin",
+    "ClientChunkCacheMixin",
+    "RenderSectionRegionMixin",
+    "BlockModelLighterMixin",
+    "ModelBlockRendererMixin",
+    "SpriteContentsAccessor",
+    "SpriteLoaderMixin",
+    "TextureAtlasMixin",
+    "SuspendedParticleMixin",
+    "CloudRendererMixin",
+    "SkyRendererMixin",
+    "FluidRendererMixin",
+    "OptionsSubScreenAccessor",
+    "GameRendererAccessor",
+    "GuiMixin",
+    "HudMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
